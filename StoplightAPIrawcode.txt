@@ -1,0 +1,460 @@
+openapi: 3.0.0
+info:
+  title: Web API
+  version: '1.0'
+  description: Exercise API to sell and buy products online
+  contact:
+    name: Jussi Mehtälä
+    email: t7meju00@students.oamk.fi
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /products:
+    get:
+      summary: Show all products
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductInfo'
+              examples:
+                example-1:
+                  value:
+                    - id: 123
+                      name: Esa Esimerkki
+                      created_at: '2002-02-05'
+                      description: 'Brand new desktop table. White, height 120cm 200cm wide'
+                      category: Furniture
+                      location: Pohjois-pohjanmaa Alavieska
+                      price: 100e
+                      delivery_type: Nouto
+                      contactInfo: 'Esa Esimerkki, 0443344333, Esimkatu 123'
+                      image: 'https://i.gyazo.com/24e7eeaddb46bddaeb93fe3f3be95f12.png'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDescription'
+      operationId: getProducts
+      description: Show all products that are being sold
+      parameters: []
+  /sell:
+    post:
+      summary: Create a  post
+      operationId: postSell
+      description: Post a product that you want to sell
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductInfo'
+            examples:
+              example-1:
+                value:
+                  id: 123
+                  name: Esa Esimerkki
+                  created_at: '2002-02-05'
+                  description: 'Brand new desktop table. White, height 120cm 200cm wide'
+                  category: Furniture
+                  location: Pohjois-pohjanmaa Alavieska
+                  price: 100e
+                  delivery_type: Nouto
+                  contactInfo: 'Esa Esimerkki, 0443344333, Esimkatu 123'
+                  image: 'https://i.gyazo.com/24e7eeaddb46bddaeb93fe3f3be95f12.png'
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      security:
+        - asd123: []
+  '/sell/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Show one of your product
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInfo'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDescription'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      operationId: getSellId
+      description: |
+        Get info about one product thaty logged in user is selling
+      security:
+        - asd123: []
+      parameters: []
+    put:
+      summary: Modify your product info
+      operationId: putSellId
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDescription'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      description: Edit your post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductInfo'
+      security:
+        - asd123: []
+    delete:
+      summary: Delete a post
+      operationId: deleteSellId
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDescription'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      description: Delete a posting
+      security:
+        - asd123: []
+  '/products/{productId}':
+    parameters:
+      - schema:
+          type: integer
+        name: productId
+        in: path
+        required: true
+    get:
+      summary: Get info about one product someone is selling
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductInfo'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDescription'
+        '404':
+          description: Not Found
+      operationId: getProductsId
+      description: Get information about one specific product that is being sold
+  /users:
+    get:
+      summary: 'Profile, login and register'
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+      operationId: login
+      description: user login
+      security:
+        - asd123: []
+    parameters: []
+    post:
+      summary: Login and registration
+      operationId: postUsers
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/errorDescription'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      description: User login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                fullName:
+                  type: string
+                email:
+                  type: string
+                birthDate:
+                  type: string
+                streetAddress:
+                  type: string
+                country:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - fullName
+                - email
+                - birthDate
+                - streetAddress
+                - country
+                - password
+            examples:
+              example-1:
+                value:
+                  username: skipaduveinau
+                  fullName: Esa Esimerkki
+                  email: esae@gmail.com
+                  birthDate: 01-01-1990
+                  streetAddress: Esimerkkikatu 10
+                  country: Suomi
+                  password: sad21234
+        description: Info required to create a account
+      security:
+        - asd123: []
+  '/users/{userId}':
+    parameters:
+      - schema:
+          type: string
+        name: userId
+        in: path
+        required: true
+        description: id of the user to be deleted
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      operationId: getUsersUserId
+      security:
+        - asd123: []
+      description: Show specific profile
+    delete:
+      summary: Delete user
+      operationId: deleteUsersUserId
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      description: |
+        Operation will delete a user
+      security:
+        - asd123: []
+    put:
+      summary: Modify userinfo
+      operationId: putUsersUserId
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not Found
+      security:
+        - asd123: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserInfo'
+      description: Edit profile info
+components:
+  schemas:
+    ProductInfo:
+      title: ProductInfo
+      type: object
+      description: All the stuff that needs to be told about product that is being sold
+      example:
+        id: 123
+        name: Esa Esimerkki
+        created_at: '2002-02-05'
+        description: 'Brand new desktop table. White, height 120cm 200cm wide'
+        category: Furniture
+        location: Pohjois-pohjanmaa Alavieska
+        price: 100e
+        delivery_type: Nouto
+        contactInfo: 'Esa Esimerkki, 0443344333, Esimkatu 123'
+        image: 'https://i.gyazo.com/24e7eeaddb46bddaeb93fe3f3be95f12.png'
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        location:
+          type: string
+        price:
+          type: string
+        created_at:
+          type: string
+          format: date
+          description: |
+            year-month-day style
+          example: '2002-02-02'
+        delivery_type:
+          type: string
+        contactInfo:
+          type: string
+        image:
+          type: string
+      required:
+        - name
+        - description
+        - category
+        - location
+        - price
+        - created_at
+        - delivery_type
+        - contactInfo
+      x-examples:
+        example-1:
+          - id: 123
+            name: Esa Esimerkki
+            created_at: '2002-02-05'
+            description: 'Brand new desktop table. White, height 120cm 200cm wide'
+            category: Furniture
+            location: Pohjois-pohjanmaa Alavieska
+            price: 100e
+            delivery_type: Nouto
+            contactInfo: 'Esa Esimerkki, 0443344333, Esimkatu 123'
+            image: 'https://i.gyazo.com/24e7eeaddb46bddaeb93fe3f3be95f12.png'
+          - id: 123
+            name: Tauno Taneli
+            created_at: '2001-05-05'
+            description: Old washing machine. Grey
+            category: Household Machine
+            location: Pohjois-pohjanmaa Ylivieska
+            price: 150e
+            delivery_type: Nouto
+            contactInfo: 'Tauno Taneli, 0444444666, Esimkatu 321'
+            image: 'https://i.gyazo.com/86f4595812c9cd825c0d5e0aabfc818d.png'
+    UserInfo:
+      description: Rqquired userinfo
+      type: object
+      x-examples:
+        example-1:
+          username: skipaduveinau
+          fullName: Esa Esimerkki
+          email: esae@gmail.com
+          birthDate: 01-01-1990
+          streetAddress: Esimerkkikatu 10
+          country: Suomi
+          password: sad21234
+      properties:
+        userId:
+          type: integer
+        username:
+          type: string
+          minLength: 1
+        fullName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          minLength: 1
+        birthDate:
+          type: string
+          minLength: 1
+        streetAddress:
+          type: string
+          minLength: 1
+        country:
+          type: string
+          minLength: 1
+        password:
+          type: string
+          minLength: 1
+      required:
+        - username
+        - fullName
+        - email
+        - birthDate
+        - streetAddress
+        - country
+        - password
+    errorDescription:
+      title: errorDescription
+      type: object
+      properties:
+        errorDescription:
+          type: string
+      description: error response
+  responses:
+    '404':
+      description: Error response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errorDescription:
+                type: string
+  securitySchemes:
+    asd123:
+      name: API key
+      type: apiKey
+      in: query
